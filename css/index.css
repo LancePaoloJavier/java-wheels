@@ -2,3 +2,19 @@
     display: flex;
     flex-direction: column;
 }
+
+@media (max-width: 576px) {
+  header form input {
+    width: 100% !important;
+    margin-top: 0.5rem;
+  }
+
+  header .text-end {
+    margin-top: 0.5rem;
+  }
+
+  .cover-section .btn {
+    width: 100%;
+  }
+}
+
