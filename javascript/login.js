@@ -2,6 +2,7 @@
 
 // Default placeholder credentials
 const defaultUser = {
+  username: "defaultuser",
   email: "user@example.com",
   password: "user123"
 };
@@ -34,7 +35,7 @@ function resetFeedback(form) {
 
   const button = form.querySelector("button[type='submit']");
   button.classList.remove("btn-danger", "btn-success");
-  button.innerText = "Login";
+  button.innerText = button.innerText.includes("Sign Up") ? "Sign Up" : "Login";
 }
 
 // -------- SIGN-UP --------
@@ -44,18 +45,49 @@ if (signUpForm) {
     e.preventDefault();
     resetFeedback(signUpForm);
 
+    const username = document.querySelector("#signUpUsername");
     const email = document.querySelector("#signUpEmail");
     const password = document.querySelector("#signUpPassword");
 
-    if (!email.value || !password.value) {
+    // Validate all fields
+    if (!username.value || !email.value || !password.value) {
+      if (!username.value) showError(username, "Username required");
       if (!email.value) showError(email, "Email required");
       if (!password.value) showError(password, "Password required");
       return;
     }
 
-    const userData = { email: email.value, password: password.value };
+    // Check if username or email already exists
+    const existingUser = JSON.parse(localStorage.getItem("registeredUser"));
+    if (existingUser) {
+      if (existingUser.username === username.value) {
+        showError(username, "Username already taken");
+        return;
+      }
+      if (existingUser.email === email.value) {
+        showError(email, "Email already registered");
+        return;
+      }
+    }
+
+    // Check against default user
+    if (username.value === defaultUser.username) {
+      showError(username, "Username already taken");
+      return;
+    }
+    if (email.value === defaultUser.email) {
+      showError(email, "Email already registered");
+      return;
+    }
+
+    const userData = { 
+      username: username.value, 
+      email: email.value, 
+      password: password.value 
+    };
     localStorage.setItem("registeredUser", JSON.stringify(userData));
     localStorage.setItem("loggedInUser", "true");
+    localStorage.setItem("currentUsername", username.value);
 
     const button = signUpForm.querySelector("button[type='submit']");
     button.classList.add("btn-success");
@@ -86,6 +118,14 @@ if (userLoginForm) {
 
     if (validLogin) {
       localStorage.setItem("loggedInUser", "true");
+      
+      // Set current username
+      if (savedUser && email.value === savedUser.email) {
+        localStorage.setItem("currentUsername", savedUser.username);
+      } else if (email.value === defaultUser.email) {
+        localStorage.setItem("currentUsername", defaultUser.username);
+      }
+
       button.classList.add("btn-success");
       button.innerText = "Login successful! Redirecting...";
       setTimeout(() => {
@@ -129,6 +169,7 @@ if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("loggedInUser");
     localStorage.removeItem("loggedInAdmin");
+    localStorage.removeItem("currentUsername");
 
     // Show logout toast
     const toastEl = document.getElementById("logoutToast");
@@ -166,6 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
       logoutBtn.addEventListener("click", () => {
         localStorage.removeItem("loggedInUser");
         localStorage.removeItem("loggedInAdmin");
+        localStorage.removeItem("currentUsername");
 
         // Show Bootstrap toast if it exists
         const toastEl = document.getElementById("logoutToast");
@@ -189,3 +231,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// -------- UTILITY FUNCTIONS FOR USERNAME ACCESS --------
+// Function to get current logged-in username
+function getCurrentUsername() {
+  return localStorage.getItem("currentUsername") || "User";
+}
+
+// Function to check if user is logged in
+function isUserLoggedIn() {
+  return localStorage.getItem("loggedInUser") === "true";
+}
+
+// Function to check if admin is logged in
+function isAdminLoggedIn() {
+  return localStorage.getItem("loggedInAdmin") === "true";
+}
