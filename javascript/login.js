@@ -55,6 +55,7 @@ if (signUpForm) {
 
     const userData = { email: email.value, password: password.value };
     localStorage.setItem("registeredUser", JSON.stringify(userData));
+    localStorage.setItem("loggedInUser", "true");
 
     const button = signUpForm.querySelector("button[type='submit']");
     button.classList.add("btn-success");
@@ -84,6 +85,7 @@ if (userLoginForm) {
       (email.value === defaultUser.email && password.value === defaultUser.password);
 
     if (validLogin) {
+      localStorage.setItem("loggedInUser", "true");
       button.classList.add("btn-success");
       button.innerText = "Login successful! Redirecting...";
       setTimeout(() => {
@@ -108,6 +110,7 @@ if (adminLoginForm) {
     const button = adminLoginForm.querySelector("button[type='submit']");
 
     if (email.value === adminUser.email && password.value === adminUser.password) {
+      localStorage.setItem("loggedInAdmin", "true");
       button.classList.add("btn-success");
       button.innerText = "Admin login successful! Redirecting...";
       setTimeout(() => {
@@ -119,3 +122,70 @@ if (adminLoginForm) {
     }
   });
 }
+
+// -------- LOGOUT BUTTON --------
+const logoutBtn = document.querySelector("#logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("loggedInAdmin");
+
+    // Show logout toast
+    const toastEl = document.getElementById("logoutToast");
+    if (toastEl) {
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    }
+
+    // Redirect after short delay
+    setTimeout(() => {
+      window.location.href = "../index.html";
+    }, 1500);
+  });
+}
+
+// -------- SHOW/HIDE HEADER BUTTONS BASED ON LOGIN --------
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutBtn = document.querySelector("#logoutBtn");
+  const loginBtn = document.querySelector("a[href$='user-login.html']");
+  const signUpBtn = document.querySelector("a[href$='sign-up.html']");
+
+  const isUserLoggedIn = localStorage.getItem("loggedInUser") === "true";
+  const isAdminLoggedIn = localStorage.getItem("loggedInAdmin") === "true";
+
+  // Store current page for redirect after logout
+  localStorage.setItem("lastVisitedPage", window.location.href);
+
+  if (logoutBtn) {
+    if (isUserLoggedIn || isAdminLoggedIn) {
+      logoutBtn.classList.remove("d-none");
+      if (loginBtn) loginBtn.classList.add("d-none");
+      if (signUpBtn) signUpBtn.classList.add("d-none");
+
+      // Attach logout listener
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("loggedInAdmin");
+
+        // Show Bootstrap toast if it exists
+        const toastEl = document.getElementById("logoutToast");
+        if (toastEl) {
+          const toast = new bootstrap.Toast(toastEl);
+          toast.show();
+        }
+
+        // Redirect to last visited page (or fallback to index)
+        const redirectTo = localStorage.getItem("lastVisitedPage") || "../index.html";
+        setTimeout(() => {
+          window.location.href = redirectTo;
+        }, 1500);
+      });
+
+    } else {
+      logoutBtn.classList.add("d-none");
+      if (loginBtn) loginBtn.classList.remove("d-none");
+      if (signUpBtn) signUpBtn.classList.remove("d-none");
+    }
+  }
+});
+

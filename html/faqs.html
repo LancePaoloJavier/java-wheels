@@ -38,6 +38,7 @@
         <div class="d-flex">
           <a href="./user-login.html" class="btn btn-outline-light me-2">Login</a>
           <a href="./sign-up.html" class="btn btn-light">Sign-up</a>
+          <button id="logoutBtn" class="btn btn-danger d-none ms-2">Logout</button>
         </div>
       </div>
     </div>
@@ -172,6 +173,18 @@
         <h4> Have a more specific question? </h4>
         <p class="lead"> Go to our contact page and contact us 24/7! </p>
         <a href="./contact-us.html" class="btn btn-lg w-50 btn-dark rounded-pill px-4 mt-2"> Contact Us </a>
+    </div>
+
+    <!-- Toast container -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+      <div id="logoutToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            You’ve been logged out successfully.
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
     </div>
 
   </div>
