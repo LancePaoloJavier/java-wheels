@@ -246,3 +246,35 @@ function isUserLoggedIn() {
 function isAdminLoggedIn() {
   return localStorage.getItem("loggedInAdmin") === "true";
 }
+
+
+// shows the button depending if the user or admin is logged in
+document.addEventListener("DOMContentLoaded", () => {
+  // Reference for header button containers
+  const navContainer = document.querySelector("#navControlContainer");
+
+  const isUser = localStorage.getItem("loggedInUser") === "true";
+  const isAdmin = localStorage.getItem("loggedInAdmin") === "true";
+  const username = localStorage.getItem("currentUsername");
+
+  if (navContainer) {
+    // Clear existing
+    navContainer.innerHTML = "";
+
+    if (isAdmin) {
+      // Admin dashboard button
+      navContainer.innerHTML = `
+        <a href="../html/admin-dashboard.html" class="btn btn-warning me-2">
+          <i class="bi bi-shield-lock-fill me-1"></i> Admin Dashboard
+        </a>
+      `;
+    } else if (isUser) {
+      // User profile button
+      navContainer.innerHTML = `
+        <a href="../html/user-dashboard.html" class="btn btn-primary me-2">
+          <i class="bi bi-person-circle me-1"></i> ${username}'s Profile
+        </a>
+      `;
+    }
+  }
+});
