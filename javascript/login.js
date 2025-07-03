@@ -1,4 +1,4 @@
-// ====== LOGIN.JS ======
+// ====== LOGIN.JS (FIXED & IMPROVED) ======
 
 // Default placeholder credentials
 const defaultUser = {
@@ -49,7 +49,6 @@ if (signUpForm) {
     const email = document.querySelector("#signUpEmail");
     const password = document.querySelector("#signUpPassword");
 
-    // Validate all fields
     if (!username.value || !email.value || !password.value) {
       if (!username.value) showError(username, "Username required");
       if (!email.value) showError(email, "Email required");
@@ -57,7 +56,6 @@ if (signUpForm) {
       return;
     }
 
-    // Check if username or email already exists
     const existingUser = JSON.parse(localStorage.getItem("registeredUser"));
     if (existingUser) {
       if (existingUser.username === username.value) {
@@ -70,7 +68,6 @@ if (signUpForm) {
       }
     }
 
-    // Check against default user
     if (username.value === defaultUser.username) {
       showError(username, "Username already taken");
       return;
@@ -80,11 +77,7 @@ if (signUpForm) {
       return;
     }
 
-    const userData = { 
-      username: username.value, 
-      email: email.value, 
-      password: password.value 
-    };
+    const userData = { username: username.value, email: email.value, password: password.value };
     localStorage.setItem("registeredUser", JSON.stringify(userData));
     localStorage.setItem("loggedInUser", "true");
     localStorage.setItem("currentUsername", username.value);
@@ -118,8 +111,7 @@ if (userLoginForm) {
 
     if (validLogin) {
       localStorage.setItem("loggedInUser", "true");
-      
-      // Set current username
+
       if (savedUser && email.value === savedUser.email) {
         localStorage.setItem("currentUsername", savedUser.username);
       } else if (email.value === defaultUser.email) {
@@ -171,14 +163,12 @@ if (logoutBtn) {
     localStorage.removeItem("loggedInAdmin");
     localStorage.removeItem("currentUsername");
 
-    // Show logout toast
     const toastEl = document.getElementById("logoutToast");
     if (toastEl) {
       const toast = new bootstrap.Toast(toastEl);
       toast.show();
     }
 
-    // Redirect after short delay
     setTimeout(() => {
       window.location.href = "../index.html";
     }, 1500);
@@ -187,42 +177,41 @@ if (logoutBtn) {
 
 // -------- SHOW/HIDE HEADER BUTTONS BASED ON LOGIN --------
 document.addEventListener("DOMContentLoaded", () => {
+  const navContainer = document.querySelector("#navControlContainer");
   const logoutBtn = document.querySelector("#logoutBtn");
   const loginBtn = document.querySelector("a[href$='user-login.html']");
   const signUpBtn = document.querySelector("a[href$='sign-up.html']");
 
   const isUserLoggedIn = localStorage.getItem("loggedInUser") === "true";
   const isAdminLoggedIn = localStorage.getItem("loggedInAdmin") === "true";
+  const username = localStorage.getItem("currentUsername");
 
-  // Store current page for redirect after logout
-  localStorage.setItem("lastVisitedPage", window.location.href);
+  const currentPageDepth = window.location.pathname.split("/").length - 1;
+  const basePath = currentPageDepth >= 4 ? "../../.." : currentPageDepth >= 3 ? "../.." : "..";
+
+  if (navContainer) {
+    navContainer.innerHTML = "";
+
+    if (isAdminLoggedIn) {
+      navContainer.innerHTML = `
+        <a href="${basePath}/html/admin-dashboard.html" class="btn btn-warning me-2">
+          <i class="bi bi-shield-lock-fill me-1"></i> Admin Dashboard
+        </a>
+      `;
+    } else if (isUserLoggedIn) {
+      navContainer.innerHTML = `
+        <a href="${basePath}/html/user-dashboard.html" class="btn btn-primary me-2">
+          <i class="bi bi-person-circle me-1"></i> ${username}'s Profile
+        </a>
+      `;
+    }
+  }
 
   if (logoutBtn) {
     if (isUserLoggedIn || isAdminLoggedIn) {
       logoutBtn.classList.remove("d-none");
       if (loginBtn) loginBtn.classList.add("d-none");
       if (signUpBtn) signUpBtn.classList.add("d-none");
-
-      // Attach logout listener
-      logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("loggedInUser");
-        localStorage.removeItem("loggedInAdmin");
-        localStorage.removeItem("currentUsername");
-
-        // Show Bootstrap toast if it exists
-        const toastEl = document.getElementById("logoutToast");
-        if (toastEl) {
-          const toast = new bootstrap.Toast(toastEl);
-          toast.show();
-        }
-
-        // Redirect to last visited page (or fallback to index)
-        const redirectTo = localStorage.getItem("lastVisitedPage") || "../index.html";
-        setTimeout(() => {
-          window.location.href = redirectTo;
-        }, 1500);
-      });
-
     } else {
       logoutBtn.classList.add("d-none");
       if (loginBtn) loginBtn.classList.remove("d-none");
@@ -231,50 +220,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// -------- UTILITY FUNCTIONS FOR USERNAME ACCESS --------
-// Function to get current logged-in username
+// -------- UTILITY FUNCTIONS --------
 function getCurrentUsername() {
   return localStorage.getItem("currentUsername") || "User";
 }
 
-// Function to check if user is logged in
 function isUserLoggedIn() {
   return localStorage.getItem("loggedInUser") === "true";
 }
 
-// Function to check if admin is logged in
 function isAdminLoggedIn() {
   return localStorage.getItem("loggedInAdmin") === "true";
 }
-
-
-// shows the button depending if the user or admin is logged in
-document.addEventListener("DOMContentLoaded", () => {
-  // Reference for header button containers
-  const navContainer = document.querySelector("#navControlContainer");
-
-  const isUser = localStorage.getItem("loggedInUser") === "true";
-  const isAdmin = localStorage.getItem("loggedInAdmin") === "true";
-  const username = localStorage.getItem("currentUsername");
-
-  if (navContainer) {
-    // Clear existing
-    navContainer.innerHTML = "";
-
-    if (isAdmin) {
-      // Admin dashboard button
-      navContainer.innerHTML = `
-        <a href="../html/admin-dashboard.html" class="btn btn-warning me-2">
-          <i class="bi bi-shield-lock-fill me-1"></i> Admin Dashboard
-        </a>
-      `;
-    } else if (isUser) {
-      // User profile button
-      navContainer.innerHTML = `
-        <a href="../html/user-dashboard.html" class="btn btn-primary me-2">
-          <i class="bi bi-person-circle me-1"></i> ${username}'s Profile
-        </a>
-      `;
-    }
-  }
-});
