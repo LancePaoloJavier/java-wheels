@@ -65,13 +65,13 @@
     <h2 id="userGreeting" class="text-center mb-4"></h2>
 
     <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
-      <button id="removeBtn" class="btn btn-danger">
+      <button id="removeSelected" class="btn btn-danger">
         <i class="bi bi-trash-fill me-1"></i> Remove Selected
       </button>
       <button id="undoBtn" class="btn btn-secondary">
         <i class="bi bi-arrow-counterclockwise me-1"></i> Undo Last Remove
       </button>
-      <button id="checkoutBtn" class="btn btn-success">
+      <button id="checkoutSelected" class="btn btn-success">
         <i class="bi bi-cart-check-fill me-1"></i> Checkout Selected
       </button>
       <button id="cancelCheckoutBtn" class="btn btn-warning">
@@ -80,12 +80,12 @@
     </div>
 
     <!-- Rented Cars -->
-    <div id="rentedCarsContainer" class="row g-4"></div>
+    <div id="rentedCars" class="row g-4"></div>
 
     <!-- Checked Out Cars -->
     <div class="checked-out-section">
       <h4>Checked Out Cars</h4>
-      <div id="checkedOutCarsContainer" class="row g-4 mt-3"></div>
+      <div id="checkedOutCars" class="row g-4 mt-3"></div>
     </div>
   </div>
 

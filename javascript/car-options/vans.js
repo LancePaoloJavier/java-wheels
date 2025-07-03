@@ -39,7 +39,7 @@ if (rentButton) {
     }
 
     const rentSuccess = document.getElementById("rentSuccess");
-    rentSuccess.innerText = `Successfully rented ${selectedCar.name}!`;
+    rentSuccess.innerText = `Successfully added to cart ${selectedCar.name}!`;
     rentSuccess.classList.remove("d-none");
 
     setTimeout(() => {

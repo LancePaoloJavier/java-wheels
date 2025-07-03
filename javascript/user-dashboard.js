@@ -14,21 +14,20 @@ const rentalsContainer = document.getElementById("rentedCars");
 const checkedOutContainer = document.getElementById("checkedOutCars");
 const removeBtn = document.getElementById("removeSelected");
 const checkoutBtn = document.getElementById("checkoutSelected");
+const confirmCheckoutBtn = document.getElementById("confirmCheckoutBtn");
 
 // Render rentals
 function renderRentals() {
   rentalsContainer.innerHTML = "";
 
   if (rentals.length === 0) {
-    rentalsContainer.innerHTML = '<p class="text-center text-secondary">No cars rented yet.</p>';
+    rentalsContainer.innerHTML = '<p class="text-center text-secondary">No cars added to cart yet.</p>';
     return;
   }
 
-  rentals.forEach((car, index) => {
+  rentals.forEach((car) => {
     const card = document.createElement("div");
-    card.className = "card mb-3 shadow-sm";
-    card.style.cursor = "pointer";
-
+    card.className = "card mb-3 shadow-sm rented-car-card";
     card.innerHTML = `
       <div class="row g-0 align-items-center">
         <div class="col-md-4">
@@ -43,7 +42,6 @@ function renderRentals() {
     `;
 
     card.addEventListener("click", () => {
-      card.classList.toggle("border-primary");
       card.classList.toggle("selected");
     });
 
@@ -60,11 +58,9 @@ function renderCheckedOut() {
     return;
   }
 
-  checkedOutCars.forEach((car, index) => {
+  checkedOutCars.forEach((car) => {
     const card = document.createElement("div");
-    card.className = "card mb-3 shadow-sm bg-light border border-2 border-success";
-    card.style.opacity = "0.9";
-
+    card.className = "card mb-3 shadow-sm checked-out-car-card";
     card.innerHTML = `
       <div class="row g-0 align-items-center">
         <div class="col-md-4">
@@ -82,53 +78,27 @@ function renderCheckedOut() {
   });
 }
 
-// Remove selected rentals
+// Remove Selected
 removeBtn.addEventListener("click", () => {
-  const selectedCards = rentalsContainer.querySelectorAll(".selected");
-  if (selectedCards.length === 0) return;
-
-  selectedCards.forEach((card) => {
+  const selected = rentalsContainer.querySelectorAll(".selected");
+  selected.forEach((card) => {
     const name = card.querySelector(".card-title").innerText;
     rentals = rentals.filter((car) => car.name !== name);
   });
-
   localStorage.setItem(rentalKey, JSON.stringify(rentals));
   renderRentals();
 });
 
-// Checkout selected rentals
+// Checkout Selected
 checkoutBtn.addEventListener("click", () => {
-  const selectedCards = rentalsContainer.querySelectorAll(".selected");
-  if (selectedCards.length === 0) return;
+  const selected = rentalsContainer.querySelectorAll(".selected");
+  if (selected.length === 0) return;
 
-  // Show checkout modal
-  const checkoutModal = new bootstrap.Modal(document.getElementById("checkoutModal"));
-  const paymentContainer = document.getElementById("paymentOptions");
-  paymentContainer.innerHTML = `
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="payment" id="creditCard" value="Credit Card" checked>
-      <label class="form-check-label" for="creditCard">
-        <i class="bi bi-credit-card me-2"></i>Credit Card
-      </label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="payment" id="paypal" value="PayPal">
-      <label class="form-check-label" for="paypal">
-        <i class="bi bi-paypal me-2"></i>PayPal
-      </label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input" type="radio" name="payment" id="cash" value="Cash">
-      <label class="form-check-label" for="cash">
-        <i class="bi bi-cash-stack me-2"></i>Cash
-      </label>
-    </div>
-  `;
-  checkoutModal.show();
+  const modal = new bootstrap.Modal(document.getElementById("checkoutModal"));
+  modal.show();
 
-  // Confirm checkout button inside modal
-  document.getElementById("confirmCheckout").onclick = () => {
-    selectedCards.forEach((card) => {
+  confirmCheckoutBtn.onclick = () => {
+    selected.forEach((card) => {
       const name = card.querySelector(".card-title").innerText;
       const car = rentals.find((c) => c.name === name);
       if (car) {
@@ -142,10 +112,10 @@ checkoutBtn.addEventListener("click", () => {
 
     renderRentals();
     renderCheckedOut();
-    checkoutModal.hide();
+    modal.hide();
   };
 });
 
-// Initial render
+// Initial Render
 renderRentals();
 renderCheckedOut();
