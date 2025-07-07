@@ -1,4 +1,4 @@
-// ====== LOGIN.JS (FIXED & IMPROVED) ======
+// ====== LOGIN.JS (FIXED WITH ABSOLUTE PATHS) ======
 
 // Default placeholder credentials
 const defaultUser = {
@@ -87,7 +87,7 @@ if (signUpForm) {
     button.innerText = "Account created! Redirecting...";
 
     setTimeout(() => {
-      window.location.href = "../index.html";
+      window.location.href = "/index.html";
     }, 1000);
   });
 }
@@ -121,7 +121,7 @@ if (userLoginForm) {
       button.classList.add("btn-success");
       button.innerText = "Login successful! Redirecting...";
       setTimeout(() => {
-        window.location.href = "../index.html";
+        window.location.href = "/index.html";
       }, 1000);
     } else {
       showError(email, "Invalid email");
@@ -146,7 +146,7 @@ if (adminLoginForm) {
       button.classList.add("btn-success");
       button.innerText = "Admin login successful! Redirecting...";
       setTimeout(() => {
-        window.location.href = "../html/admin-dashboard.html";
+        window.location.href = "/index.html";
       }, 1000);
     } else {
       showError(email, "Invalid admin email");
@@ -170,7 +170,7 @@ if (logoutBtn) {
     }
 
     setTimeout(() => {
-      window.location.href = "../index.html";
+      window.location.href = "/index.html";
     }, 1500);
   });
 }
@@ -186,21 +186,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const isAdminLoggedIn = localStorage.getItem("loggedInAdmin") === "true";
   const username = localStorage.getItem("currentUsername");
 
-  const currentPageDepth = window.location.pathname.split("/").length - 1;
-  const basePath = currentPageDepth >= 4 ? "../../.." : currentPageDepth >= 3 ? "../.." : "..";
-
   if (navContainer) {
     navContainer.innerHTML = "";
 
     if (isAdminLoggedIn) {
       navContainer.innerHTML = `
-        <a href="${basePath}/html/admin-dashboard.html" class="btn btn-warning me-2">
+        <a href="/html/admin-dashboard.html" class="btn btn-warning me-2">
           <i class="bi bi-shield-lock-fill me-1"></i> Admin Dashboard
         </a>
       `;
     } else if (isUserLoggedIn) {
       navContainer.innerHTML = `
-        <a href="${basePath}/html/user-dashboard.html" class="btn btn-primary me-2">
+        <a href="/html/user-dashboard.html" class="btn btn-primary me-2">
           <i class="bi bi-person-circle me-1"></i> ${username}'s Profile
         </a>
       `;

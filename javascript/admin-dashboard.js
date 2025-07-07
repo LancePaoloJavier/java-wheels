@@ -1,50 +1,79 @@
-// ====== ADMIN-DASHBOARD.JS ======
+// ===== admin-dashboard.js =====
 
-let rentedCars = [];
-let removedCar = null;
+// 1. Admin Login Check
+const currentUsername = localStorage.getItem("currentUsername");
+if (currentUsername !== "admin") {
+  window.location.href = "../user-login.html"; // Redirect non-admins
+}
 
-const carInput = document.getElementById("carInput");
-const addCarBtn = document.getElementById("addCarBtn");
-const removeCarBtn = document.getElementById("removeCarBtn");
-const undoCarBtn = document.getElementById("undoCarBtn");
-const rentedCarsList = document.getElementById("rentedCarsList");
+// 2. Load all users' carts & rentals
+function loadUsersCars() {
+  const table = document.getElementById("usersCarsTable");
+  table.innerHTML = "";
 
-function renderCars() {
-  rentedCarsList.innerHTML = "";
-  rentedCars.forEach((car, index) => {
-    const li = document.createElement("li");
-    li.className = "list-group-item list-group-item-action";
-    li.textContent = car;
-    li.dataset.index = index;
-    li.addEventListener("click", () => {
-      li.classList.toggle("active");
-    });
-    rentedCarsList.appendChild(li);
+  Object.keys(localStorage).forEach((key) => {
+    if (key.endsWith("_rentedCars") || key.endsWith("_checkedOutCars")) {
+      const username = key.split("_")[0];
+      const cars = JSON.parse(localStorage.getItem(key));
+
+      cars.forEach((car) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${username}</td>
+          <td><img src="${car.image}" alt="${car.name}"></td>
+          <td>${car.name}</td>
+          <td>${key.includes("checkedOut") ? "Checked Out" : "In Cart"}</td>
+        `;
+        table.appendChild(tr);
+      });
+    }
   });
 }
 
-addCarBtn.addEventListener("click", () => {
-  const value = carInput.value.trim();
-  if (value) {
-    rentedCars.push(value);
-    carInput.value = "";
-    renderCars();
+// 3. Load Car Listings
+function loadCarListings() {
+  const table = document.getElementById("carListTable");
+  table.innerHTML = "";
+
+  const carListings = JSON.parse(localStorage.getItem("carListings")) || [];
+  carListings.forEach((car, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><img src="${car.image}" alt="${car.name}"></td>
+      <td>${car.name}</td>
+      <td>${car.type}</td>
+    `;
+    tr.dataset.index = index;
+    table.appendChild(tr);
+  });
+}
+
+// 4. Add New Car
+document.getElementById("addCarForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const newCar = {
+    name: form.name.value.trim(),
+    image: form.image.value.trim(),
+    type: form.type.value,
+  };
+
+  if (newCar.name && newCar.image && newCar.type) {
+    const carListings = JSON.parse(localStorage.getItem("carListings")) || [];
+    carListings.push(newCar);
+    localStorage.setItem("carListings", JSON.stringify(carListings));
+    loadCarListings();
+    form.reset();
+    bootstrap.Modal.getInstance(document.getElementById("addCarModal")).hide();
   }
 });
 
-removeCarBtn.addEventListener("click", () => {
-  const selected = document.querySelector(".list-group-item.active");
-  if (selected) {
-    const index = parseInt(selected.dataset.index);
-    removedCar = rentedCars.splice(index, 1)[0];
-    renderCars();
-  }
+// 5. Logout Button
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.removeItem("currentUsername");
+  window.location.href = "../user-login.html";
 });
 
-undoCarBtn.addEventListener("click", () => {
-  if (removedCar) {
-    rentedCars.push(removedCar);
-    removedCar = null;
-    renderCars();
-  }
-});
+// Initial Load
+loadUsersCars();
+loadCarListings();
