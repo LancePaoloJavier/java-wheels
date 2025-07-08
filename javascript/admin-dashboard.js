@@ -1,103 +1,101 @@
-// ===== Admin Dashboard JS =====
+// ===== admin-dashboard.js =====
 
-// ✅ Redirect Non-Admins
-if (localStorage.getItem("loggedInAdmin") !== "true") {
-  window.location.href = "/index.html";
+// Load cars from localStorage or set defaults
+function loadCars(category) {
+  return JSON.parse(localStorage.getItem(`${category}Cars`)) || [];
 }
 
-// Dummy: Example user list (replace with your own user management later)
-const userList = JSON.parse(localStorage.getItem("userList")) || ["defaultuser"];
-
-// ✅ Render Users’ Cart & Rentals
-function loadUserRentals() {
-  const usersTable = document.getElementById("usersTableBody");
-  usersTable.innerHTML = "";
-
-  userList.forEach((username) => {
-    const rentalKey = `${username}_rentedCars`;
-    const rentals = JSON.parse(localStorage.getItem(rentalKey)) || [];
-
-    rentals.forEach((car) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${username}</td>
-        <td><img src="${car.image}" alt="${car.name}" width="80" /></td>
-        <td>${car.name}</td>
-      `;
-      usersTable.appendChild(row);
-    });
-  });
+function saveCars(category, cars) {
+  localStorage.setItem(`${category}Cars`, JSON.stringify(cars));
 }
 
-// ✅ Render Car Management Table (Placeholder cars for now)
-let carInventory = JSON.parse(localStorage.getItem("carInventory")) || [
-  {
-    name: "Mazda Miata",
-    image: "../../assets/car-options/sedan/mazda-miata.avif",
-    type: "Sedan"
-  },
-  {
-    name: "Chevrolet Malibu",
-    image: "../../assets/car-options/sedan/chevrolet-malibu.avif",
-    type: "Sedan"
-  }
-];
+// Render cars in table
+function renderCarTable(category, container) {
+  const cars = loadCars(category);
+  container.innerHTML = "";
 
-function loadCarInventory() {
-  const carsTable = document.getElementById("carsTableBody");
-  carsTable.innerHTML = "";
-
-  carInventory.forEach((car, index) => {
+  cars.forEach((car, index) => {
     const row = document.createElement("tr");
-    row.dataset.index = index;
     row.innerHTML = `
-      <td><img src="${car.image}" alt="${car.name}" width="80" /></td>
+      <td>${index + 1}</td>
       <td>${car.name}</td>
-      <td>${car.type}</td>
+      <td><img src="${car.image}" alt="${car.name}" style="width: 100px;"></td>
+      <td>
+        <button class="btn btn-danger btn-sm" data-index="${index}" data-category="${category}">
+          <i class="bi bi-trash"></i> Delete
+        </button>
+      </td>
     `;
-    row.addEventListener("click", () => {
-      document.getElementById("updateCarBtn").disabled = false;
-      document.getElementById("deleteCarBtn").disabled = false;
-      document.querySelectorAll("#carsTableBody tr").forEach(r => r.classList.remove("table-primary"));
-      row.classList.add("table-primary");
-      selectedCarIndex = index;
-    });
-
-    carsTable.appendChild(row);
+    container.appendChild(row);
   });
 }
 
-let selectedCarIndex = null;
+// Render all categories
+function renderAllCategories() {
+  renderCarTable("sedan", document.querySelector("#sedanTableBody"));
+  renderCarTable("suv", document.querySelector("#suvTableBody"));
+  renderCarTable("van", document.querySelector("#vanTableBody"));
+}
 
-// ✅ Delete Car
-document.getElementById("deleteCarBtn").addEventListener("click", () => {
-  if (selectedCarIndex !== null) {
-    carInventory.splice(selectedCarIndex, 1);
-    localStorage.setItem("carInventory", JSON.stringify(carInventory));
-    loadCarInventory();
-    selectedCarIndex = null;
-    document.getElementById("updateCarBtn").disabled = true;
-    document.getElementById("deleteCarBtn").disabled = true;
+renderAllCategories();
+
+// Delete car
+document.addEventListener("click", (e) => {
+  if (e.target.closest(".btn-danger")) {
+    const button = e.target.closest(".btn-danger");
+    const index = parseInt(button.dataset.index);
+    const category = button.dataset.category;
+    const cars = loadCars(category);
+    cars.splice(index, 1);
+    saveCars(category, cars);
+    renderAllCategories();
   }
 });
 
-// ✅ Add New Car
-document.getElementById("addCarForm").addEventListener("submit", (e) => {
+// Add new car
+document.querySelector("#addCarForm").addEventListener("submit", (e) => {
   e.preventDefault();
+  const category = document.querySelector("#carCategory").value;
+  const name = document.querySelector("#carName").value;
+  const image = document.querySelector("#carImage").value;
 
-  const newCar = {
-    name: e.target.name.value,
-    image: e.target.image.value,
-    type: e.target.type.value
-  };
+  const cars = loadCars(category);
+  cars.push({ name, image });
+  saveCars(category, cars);
+  renderAllCategories();
 
-  carInventory.push(newCar);
-  localStorage.setItem("carInventory", JSON.stringify(carInventory));
-  loadCarInventory();
-  bootstrap.Modal.getInstance(document.getElementById("addCarModal")).hide();
   e.target.reset();
 });
 
-// ✅ Initialize Tables
-loadUserRentals();
-loadCarInventory();
+// Render user carts
+function renderUserCarts() {
+  const userCartsContainer = document.querySelector("#userCartsContainer");
+  userCartsContainer.innerHTML = "";
+
+  for (let key in localStorage) {
+    if (key.endsWith("_rentedCars")) {
+      const username = key.replace("_rentedCars", "");
+      const cars = JSON.parse(localStorage.getItem(key));
+
+      const section = document.createElement("div");
+      section.className = "mb-4";
+      section.innerHTML = `<h5>${username}'s Cart</h5>`;
+
+      if (cars.length === 0) {
+        section.innerHTML += `<p>No cars in cart.</p>`;
+      } else {
+        const list = document.createElement("ul");
+        cars.forEach((car) => {
+          const item = document.createElement("li");
+          item.textContent = car.name;
+          list.appendChild(item);
+        });
+        section.appendChild(list);
+      }
+
+      userCartsContainer.appendChild(section);
+    }
+  }
+}
+
+renderUserCarts();
