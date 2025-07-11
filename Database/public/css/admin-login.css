@@ -1,0 +1,26 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.full-height {
+  height: 100vh;
+}
+
+/* Left side image */
+.left-image {
+  background-image: url('/assets/images/admin-login-cover.webp');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Mobile adjustments */
+@media (max-width: 767.98px) {
+  .left-image {
+    height: 300px;
+  }
+
+  .full-height {
+    height: auto;
+  }
+}

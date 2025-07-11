@@ -1,0 +1,49 @@
+/* Ensure full height */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* blurred background image */
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/assets/images/car-rental-cover-page.webp') center center / cover no-repeat;
+  filter: blur(8px) brightness(0.4);
+  z-index: -1;
+}
+
+/* sign-up card */
+.signup-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: rgba(30, 30, 30, 0.95);
+  border: none;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+/* input styles */
+.signup-card input.form-control {
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+.signup-card input.form-control::placeholder {
+  color: #aaa;
+}
+
+.signup-card .form-label {
+  color: #ddd;
+}
+
+.signup-card a {
+  color: #ffc107;
+}
