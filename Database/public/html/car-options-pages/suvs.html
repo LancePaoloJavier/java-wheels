@@ -28,19 +28,19 @@
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active fw-bold" href="../../index.html">Home</a>
+          <a class="nav-link active fw-bold" href="/index.html">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../features.html">Features</a>
+          <a class="nav-link" href="/html/features.html">Features</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="..//html/rent-car.html">Rent</a>
+          <a class="nav-link" href="/html/rent-car.html">Rent</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../faqs.html">FAQs</a>
+          <a class="nav-link" href="/html/faqs.html">FAQs</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../contact-us.html">Contact Us</a>
+          <a class="nav-link" href="/html/contact-us.html">Contact Us</a>
         </li>
       </ul>
 
@@ -50,8 +50,8 @@
 
       <div class="d-flex">
         <div id="navControlContainer" class="me-2"></div>
-        <a href="../user-login.html" class="btn btn-outline-light me-2">Login</a>
-        <a href="../sign-up.html" class="btn btn-light">Sign-up</a>
+        <a href="/html/user-login.html" class="btn btn-outline-light me-2">Login</a>
+        <a href="/html/sign-up.html" class="btn btn-light">Sign-up</a>
         <button id="logoutBtn" class="btn btn-danger d-none ms-2">Logout</button>
       </div>
     </div>
@@ -71,7 +71,7 @@
     <div class="col-md-4">
       <div class="card shadow text-center">
         <h5 class="card-title mt-3">Kia Niro</h5>
-        <img src="..//assets/car-options/suvs/kia-niro.avif" alt="Kia Niro" class="img-fluid my-3" style="height: 220px; object-fit: cover;">
+        <img src="/assets/car-options/suvs/kia-niro.avif" alt="Kia Niro" class="img-fluid my-3" style="height: 220px; object-fit: cover;">
         <ul class="list-unstyled mb-3">
           <li><i class="bi bi-gear-fill me-2"></i>Automatic Transmission</li>
           <li><i class="bi bi-person-fill me-2"></i>5 Seats</li>
@@ -80,7 +80,7 @@
         <button class="btn btn-dark w-100"
           data-bs-toggle="modal"
           data-bs-target="#detailsModal"
-          data-car='{"name":"Kia Niro","image":"..//assets/car-options/suvs/kia-niro.avif"}'>
+          data-car='{"name":"Kia Niro","image":"/assets/car-options/suvs/kia-niro.avif"}'>
           View Details
         </button>
       </div>
@@ -90,7 +90,7 @@
     <div class="col-md-4">
       <div class="card shadow text-center">
         <h5 class="card-title mt-3">Jeep Wrangler</h5>
-        <img src="..//assets/car-options/suvs/jeep-wrangler.avif" alt="Jeep Wrangler" class="img-fluid my-3" style="height: 220px; object-fit: cover;">
+        <img src="/assets/car-options/suvs/jeep-wrangler.avif" alt="Jeep Wrangler" class="img-fluid my-3" style="height: 220px; object-fit: cover;">
         <ul class="list-unstyled mb-3">
           <li><i class="bi bi-gear-fill me-2"></i>Manual Transmission</li>
           <li><i class="bi bi-person-fill me-2"></i>4 Seats</li>
@@ -99,7 +99,7 @@
         <button class="btn btn-dark w-100"
           data-bs-toggle="modal"
           data-bs-target="#detailsModal"
-          data-car='{"name":"Jeep Wrangler","image":"..//assets/car-options/suvs/jeep-wrangler.avif"}'>
+          data-car='{"name":"Jeep Wrangler","image":"/assets/car-options/suvs/jeep-wrangler.avif"}'>
           View Details
         </button>
       </div>
@@ -109,7 +109,7 @@
     <div class="col-md-4">
       <div class="card shadow text-center">
         <h5 class="card-title mt-3">Hyundai Kona</h5>
-        <img src="..//assets/car-options/suvs/hyundai-kona.avif" alt="Hyundai Kona" class="img-fluid my-3" style="height: 220px; object-fit: cover;">
+        <img src="/assets/car-options/suvs/hyundai-kona.avif" alt="Hyundai Kona" class="img-fluid my-3" style="height: 220px; object-fit: cover;">
         <ul class="list-unstyled mb-3">
           <li><i class="bi bi-gear-fill me-2"></i>Automatic Transmission</li>
           <li><i class="bi bi-person-fill me-2"></i>5 Seats</li>
@@ -118,7 +118,7 @@
         <button class="btn btn-dark w-100"
           data-bs-toggle="modal"
           data-bs-target="#detailsModal"
-          data-car='{"name":"Hyundai Kona","image":"..//assets/car-options/suvs/hyundai-kona.avif"}'>
+          data-car='{"name":"Hyundai Kona","image":"/assets/car-options/suvs/hyundai-kona.avif"}'>
           View Details
         </button>
       </div>
@@ -157,7 +157,7 @@
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
   <div id="logoutToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
-      <div class="toast-body">You’ve been logged out successfully.</div>
+      <div class="toast-body">You've been logged out successfully.</div>
       <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
   </div>
@@ -165,8 +165,8 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="..//javascript/login.js"></script>
-<script src="..//javascript/car-options/suvs.js"></script>
+<script src="/javascript/login.js"></script>
+<script src="/javascript/car-options/suvs.js"></script>
 
 </body>
 </html>
