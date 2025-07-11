@@ -8,17 +8,24 @@
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": ["car-rental", "express", "mysql", "nodejs"],
+  "keywords": [
+    "car-rental",
+    "express",
+    "mysql",
+    "nodejs"
+  ],
   "author": "SaKaya Team",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "express-mysql-session": "^3.0.3",
     "express-session": "^1.18.1",
     "mysql": "^2.18.1",
-    "mysql2": "^3.14.1",
+    "mysql2": "^3.14.2",
     "nodemon": "^3.1.10"
   },
   "engines": {
